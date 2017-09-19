@@ -32,17 +32,6 @@ class ViewController: UITableViewController {
             }
         }
     }
-    //    func callAgain(){
-    //        Networking.callNetworkApi(type: NetworkCallType.apiUrl, objectName: currentPage){
-    //            [unowned self](dictionary, error) in
-    //            guard let results = dictionary["results"] as? [[String:Any]] else {return}
-    //            _ = results.flatMap{
-    //                self.myCharacterObjectArray.append(SWCharacter(dict:$0)!)
-    //            }
-    //            let updatedPage = String((Int(self.currentPage) ?? 0) + 1)
-    //            self.networkCall(currentPage: updatedPage)
-    //        }
-    //    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -78,22 +67,10 @@ class ViewController: UITableViewController {
                 }
                 print("\ninside more cells")
                 print(myCharacterArray.map{$0.name})
-//                let hasNext = dictionary["next"] as? String
                 DispatchQueue.main.async {
                     self.myCharacterObjectArray += myCharacterArray
                     self.currentPage = String((Int(self.currentPage) ?? 0) + 1)
                     print("\n\n\ncurent page -> -> \(self.currentPage)")
-//                    if hasNext != nil {
-//                        let updatedPage = String((Int(self.currentPage) ?? 0) + 1)
-//                        self.networkCall(currentPage: updatedPage)
-//                    }
-//                    if numberOfCells == 87{
-//                        self.myCharacterObjectArray.append(contentsOf: myCharacterArray[0...87])
-//                    } else {
-//                        self.myCharacterObjectArray.append(contentsOf: myCharacterArray)
-//
-//                    }
-//                    self.myCharacterObjectArray = swArray ?? []
                     self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
                 }

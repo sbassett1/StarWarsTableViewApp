@@ -45,7 +45,6 @@ class Networking {
     private static func callApi(url:String, completion:@escaping ([String:Any], Error?) -> ()) {
         print("first guard")
         guard let url = URL(string:url) else {
-//            completion(nil, NetworkingErrors.UrlIsBad)
             return
         }
         print("pre session")
@@ -63,15 +62,6 @@ class Networking {
             do {
                 let json = try JSONSerialization.jsonObject(with: data)
                 guard let dictionary = json as? [String:Any] else {return}
-//                guard let results = dictionary["results"] as? [[String:Any]] else {return}
-//                let hasNext = dictionary["next"] as? String
-//                if hasNext != nil {
-//                    callNetworkApi(type: .apiUrl, objectName: <#T##String#>, closure: <#T##([SWCharacter]?, Error?) -> ()#>)
-//                }
-//                let myCharacterArray = results.flatMap{
-//                    SWCharacter(dict:$0)
-//                }
-//                print(myCharacterArray)
                 completion(dictionary, error)
             } catch {
                 print("something went wrong")
@@ -139,15 +129,6 @@ class Networking {
             do {
                 let json = try JSONSerialization.jsonObject(with: data)
                 guard let dictionary = json as? [String:Any] else {return}
-                //                guard let results = dictionary["results"] as? [[String:Any]] else {return}
-                //                let hasNext = dictionary["next"] as? String
-                //                if hasNext != nil {
-                //                    callNetworkApi(type: .apiUrl, objectName: <#T##String#>, closure: <#T##([SWCharacter]?, Error?) -> ()#>)
-                //                }
-                //                let myCharacterArray = results.flatMap{
-                //                    SWCharacter(dict:$0)
-                //                }
-                //                print(myCharacterArray)
                 completion(dictionary, error)
             } catch {
                 print("something went wrong")
