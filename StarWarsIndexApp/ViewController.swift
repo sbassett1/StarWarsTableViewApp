@@ -27,7 +27,6 @@ class ViewController: UITableViewController {
             DispatchQueue.main.async {
                 self.currentPage = String((Int(self.currentPage) ?? 0) + 1)
                 self.myCharacterObjectArray = myCharacterArray
-                print(self.myCharacterObjectArray.count)
                 self.tableView.reloadData()
             }
         }
@@ -40,14 +39,12 @@ class ViewController: UITableViewController {
         return 1
     }
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(self.myCharacterObjectArray.count)
         return self.myCharacterObjectArray.count
     }
     override func tableView(_ tableView: UITableView,cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = self.tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? MyTableViewCell else {fatalError("bad cell")}
         let name = self.myCharacterObjectArray[indexPath.row].name
         let birthYear = self.myCharacterObjectArray[indexPath.row].birthYear
-        print("this is in cell", self.myCharacterObjectArray.count)
         cell.populateCell(name: name, birthYear: birthYear)
         return cell
     }
@@ -55,7 +52,6 @@ class ViewController: UITableViewController {
         let endOfCells = scrollView.contentSize.height + scrollView.contentInset.bottom - scrollView.bounds.height
         let didReachEnd:Bool = scrollView.contentOffset.y >= endOfCells
         let numberOfCells = myCharacterObjectArray.count
-        print(didReachEnd)
         activityIndicator.startAnimating()
         if didReachEnd && numberOfCells <= 88 && !characterSet.contains(numberOfCells){
             characterSet.insert(numberOfCells)
@@ -65,14 +61,12 @@ class ViewController: UITableViewController {
                 let myCharacterArray = results.flatMap{
                     SWCharacter(dict:$0)
                 }
-                print("\ninside more cells")
-                print(myCharacterArray.map{$0.name})
                 DispatchQueue.main.async {
                     self.myCharacterObjectArray += myCharacterArray
                     self.currentPage = String((Int(self.currentPage) ?? 0) + 1)
-                    print("\n\n\ncurent page -> -> \(self.currentPage)")
                     self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
+//                    self.activityIndicator.isHidden = true
                 }
             }
             

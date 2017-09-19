@@ -43,19 +43,14 @@ class Networking {
         }
     }
     private static func callApi(url:String, completion:@escaping ([String:Any], Error?) -> ()) {
-        print("first guard")
         guard let url = URL(string:url) else {
             return
         }
-        print("pre session")
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in
             guard error == nil else {return}
-            print("post task")
             guard let response = response as? HTTPURLResponse else {return}
-            print("post response")
             guard response.statusCode == 200 else {
-                print("200 fail \(response.statusCode)")
                 return
             }
             guard let data = data else {return}
@@ -73,7 +68,6 @@ class Networking {
         switch type {
         case .imageUrl:
             downloadImage(url: type.getUrl() + objectName + ".png", closure: closure)
-            print("image downloaded success")
         default:
             return
         }
@@ -98,31 +92,24 @@ class Networking {
                 closure(nil, NetworkingErrors.NoDataOnUrl)
                 return
             }
-            print("data returned \(data)")
             guard let image = UIImage(data:data) else {
                 closure(nil, NetworkingErrors.DataHasNoImage)
                 return
             }
-            print("image returned")
             closure(image, nil)
         }
         task.resume()
     }
     static func homeworldCall(url:String, completion:@escaping ([String:Any], Error?) -> ()) {
-        print("first guard")
         guard let url = URL(string:url) else {
             //            completion(nil, NetworkingErrors.UrlIsBad)
             return
         }
-        print("pre session")
         let session = URLSession.shared
         let task = session.dataTask(with: url) { (data, response, error) in
             guard error == nil else {return}
-            print("post task")
             guard let response = response as? HTTPURLResponse else {return}
-            print("post response")
             guard response.statusCode == 200 else {
-                print("200 fail \(response.statusCode)")
                 return
             }
             guard let data = data else {return}
@@ -131,7 +118,6 @@ class Networking {
                 guard let dictionary = json as? [String:Any] else {return}
                 completion(dictionary, error)
             } catch {
-                print("something went wrong")
             }
         }
         task.resume()

@@ -12,7 +12,6 @@ class MyTableViewCell: UITableViewCell {
     @IBOutlet weak var cellName: UILabel!
     @IBOutlet weak var cellBirthYear: UILabel!
     func populateCell(name:String,birthYear:String){
-        print("got to pop image")
         self.cellName.text = name
         self.cellBirthYear.text = birthYear
         let name = (name.components(separatedBy: .whitespaces).joined() as NSString).replacingOccurrences(of: "é", with: "e") as NSString
@@ -22,9 +21,9 @@ class MyTableViewCell: UITableViewCell {
 //            cellImage.image = 
             Networking.callNetworkImage(type: .imageUrl,objectName: name as String){
                 [weak self, weak name](image, error) in
-                guard error == nil else {return print("error image call")}
+                guard error == nil else {return}
                 
-                guard let image = image as? UIImage else {return print("got image")}
+                guard let image = image as? UIImage else {return}
                 Cache.shared.imageCache.setObject(image, forKey: name ?? "")
                 DispatchQueue.main.async {
                     self?.cellImage.image = image
