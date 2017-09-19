@@ -20,7 +20,8 @@ class DetailViewController:UIViewController{
     @IBOutlet weak var detailGender: UILabel!
     weak var details:SWCharacter? {
         didSet {
-            guard let unwrappedName = self.details?.name.components(separatedBy: .whitespaces).joined() else {return}
+            guard var unwrappedName = self.details?.name else {return}
+            unwrappedName = unwrappedName.components(separatedBy: .whitespaces).joined().replacingOccurrences(of: "é", with: "e")
             print("afterGuard")
             Networking.callNetworkImage(type: .imageUrl,objectName: unwrappedName){
                 [weak self](image,error) in

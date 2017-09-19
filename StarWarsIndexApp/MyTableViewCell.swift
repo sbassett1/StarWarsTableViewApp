@@ -15,16 +15,17 @@ class MyTableViewCell: UITableViewCell {
         print("got to pop image")
         self.cellName.text = name
         self.cellBirthYear.text = birthYear
-        if let image = Cache.shared.imageCache.object(forKey: name.components(separatedBy: .whitespaces).joined() as NSString){
+        let name = (name.components(separatedBy: .whitespaces).joined() as NSString).replacingOccurrences(of: "é", with: "e") as NSString
+        if let image = Cache.shared.imageCache.object(forKey: name){
             self.cellImage.image = image
         } else {
 //            cellImage.image = 
-            Networking.callNetworkImage(type: .imageUrl,objectName: name.components(separatedBy: .whitespaces).joined()){
-                [weak self](image, error) in
+            Networking.callNetworkImage(type: .imageUrl,objectName: name as String){
+                [weak self, weak name](image, error) in
                 guard error == nil else {return print("error image call")}
                 
                 guard let image = image as? UIImage else {return print("got image")}
-                Cache.shared.imageCache.setObject(image, forKey: name.components(separatedBy: .whitespaces).joined() as NSString)
+                Cache.shared.imageCache.setObject(image, forKey: name ?? "")
                 DispatchQueue.main.async {
                     self?.cellImage.image = image
                 }
