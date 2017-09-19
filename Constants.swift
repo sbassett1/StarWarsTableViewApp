@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+
+class Constants{
+    static let kApiUrl:String = "https://swapi.co/api/people/"
+    static let kImageUrl:String = "https://raw.githubusercontent.com/sbassett1/swImages/master/"
+}

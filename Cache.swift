@@ -7,3 +7,9 @@
 //
 
 import Foundation
+import UIKit
+
+class Cache{
+    static var shared = Cache()
+    var imageCache = NSCache<NSString,UIImage>()
+}

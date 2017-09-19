@@ -2,34 +2,61 @@
 //  DetailViewController.swift
 //  StarWarsIndexApp
 //
-//  Created by Mac on 9/3/17.
+//  Created by Mac on 9/2/17.
 //  Copyright © 2017 Mac. All rights reserved.
 //
-
+import Foundation
 import UIKit
 
-class DetailViewController: UIViewController {
-
+class DetailViewController:UIViewController{
+    @IBOutlet weak var detailImageView: UIImageView!
+    @IBOutlet weak var detailName: UILabel!
+    @IBOutlet weak var detailBirthYear: UILabel!
+    @IBOutlet weak var detailHeight: UILabel!
+    @IBOutlet weak var detailMass: UILabel!
+    @IBOutlet weak var detailHairColor: UILabel!
+    @IBOutlet weak var detailSkinColor: UILabel!
+    @IBOutlet weak var detailEyeColor: UILabel!
+    @IBOutlet weak var detailGender: UILabel!
+    weak var details:SWCharacter? {
+        didSet {
+            guard let unwrappedName = self.details?.name.components(separatedBy: .whitespaces).joined() else {return}
+            print("afterGuard")
+            Networking.callNetworkImage(type: .imageUrl,objectName: unwrappedName){
+                [weak self](image,error) in
+                guard error == nil else {return print("error image call")}
+                    print("return image from detail")
+                guard let image = image as? UIImage else {return print("got image")}
+                Cache.shared.imageCache.setObject(image, forKey: unwrappedName as NSString)
+                DispatchQueue.main.async {
+                    self?.detailImageView.image = image
+                    self?.view.reloadInputViews()
+                }
+            }
+        }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        self.navigationItem.title = details?.name
+        detailName.text = details?.name
+        detailBirthYear.text = details?.birthYear
+        detailHeight.text = details?.height
+        detailMass.text = details?.mass
+        detailHairColor.text = details?.hairColor
+        detailSkinColor.text = details?.skinColor
+        detailEyeColor.text = details?.eyeColor
+        detailGender.text = details?.gender
+        
     }
-
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func getHomeWorld(_ sender: UIButton) {
+//        let mainstoryboard = UIStoryboard(name: "Main", bundle: nil)
+//        guard let home:Homeworld = mainstoryboard.instantiateViewController(withIdentifier: "homeworld") as? Homeworld else {return}
+//        home.delegate = self as? goToHomeworld
+//        present(home, animated:  true, completion: nil)
     }
-    */
-
 }
+
