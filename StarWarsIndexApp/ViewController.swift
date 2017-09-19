@@ -25,6 +25,7 @@ class ViewController: UITableViewController {
                 SWCharacter(dict:$0)
             }
             DispatchQueue.main.async {
+                self.currentPage = String((Int(self.currentPage) ?? 0) + 1)
                 self.myCharacterObjectArray = myCharacterArray
                 print(self.myCharacterObjectArray.count)
                 self.tableView.reloadData()
@@ -67,7 +68,7 @@ class ViewController: UITableViewController {
         let numberOfCells = myCharacterObjectArray.count
         print(didReachEnd)
         activityIndicator.startAnimating()
-        if didReachEnd && numberOfCells <= 87 && !characterSet.contains(numberOfCells){
+        if didReachEnd && numberOfCells <= 88 && !characterSet.contains(numberOfCells){
             characterSet.insert(numberOfCells)
             Networking.callNetworkApi(type: NetworkCallType.apiUrl, objectName: currentPage){
                 [unowned self](dictionary, error) in
@@ -75,18 +76,23 @@ class ViewController: UITableViewController {
                 let myCharacterArray = results.flatMap{
                     SWCharacter(dict:$0)
                 }
+                print("\ninside more cells")
+                print(myCharacterArray.map{$0.name})
 //                let hasNext = dictionary["next"] as? String
                 DispatchQueue.main.async {
+                    self.myCharacterObjectArray += myCharacterArray
+                    self.currentPage = String((Int(self.currentPage) ?? 0) + 1)
+                    print("\n\n\ncurent page -> -> \(self.currentPage)")
 //                    if hasNext != nil {
 //                        let updatedPage = String((Int(self.currentPage) ?? 0) + 1)
 //                        self.networkCall(currentPage: updatedPage)
 //                    }
-                    if numberOfCells == 87{
-                        self.myCharacterObjectArray.append(contentsOf: myCharacterArray[0...87])
-                    } else {
-                        self.myCharacterObjectArray.append(contentsOf: myCharacterArray)
-                        
-                    }
+//                    if numberOfCells == 87{
+//                        self.myCharacterObjectArray.append(contentsOf: myCharacterArray[0...87])
+//                    } else {
+//                        self.myCharacterObjectArray.append(contentsOf: myCharacterArray)
+//
+//                    }
 //                    self.myCharacterObjectArray = swArray ?? []
                     self.tableView.reloadData()
                     self.activityIndicator.stopAnimating()
