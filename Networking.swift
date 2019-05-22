@@ -8,18 +8,20 @@
 import Foundation
 import UIKit
 
-enum NetworkingErrors:Error{
+enum NetworkingErrors: Error {
     case UrlIsBad
     case NoDataOnUrl
     case DataHasNoImage
 }
-enum NetworkCallType{
+
+enum NetworkCallType {
     case apiUrl
     case individualCall
     case imageUrl
     case character
     case starship
-    func getUrl()->String{
+    
+    func getUrl() -> String {
         switch self {
         case .apiUrl:
             return Constants.kApiUrl + "?page="
@@ -28,35 +30,39 @@ enum NetworkCallType{
         case .imageUrl:
             return Constants.kImageUrl
         default:
-            return "didnt get url in enum func!"
+            return "didnt get url!"
         }
     }
 }
 
 class Networking {
-    static func callNetworkApi(type:NetworkCallType, objectName: String, closure:@escaping([String:Any],Error?) -> ()){
-        switch type{
+    
+    static func callNetworkApi(type: NetworkCallType,
+                               objectName: String,
+                               closure: @escaping ([String: Any], Error?) -> ()) {
+        switch type {
         case .apiUrl:
             callApi(url: type.getUrl() + objectName, completion: closure)
         default:
             return
         }
     }
-    private static func callApi(url:String, completion:@escaping ([String:Any], Error?) -> ()) {
-        guard let url = URL(string:url) else {
-            return
-        }
+    
+    private static func callApi(url: String, completion: @escaping ([String: Any], Error?) -> ()) {
+        
+        guard let url = URL(string: url) else { return }
+        
         let session = URLSession.shared
-        let task = session.dataTask(with: url) { (data, response, error) in
-            guard error == nil else {return}
-            guard let response = response as? HTTPURLResponse else {return}
-            guard response.statusCode == 200 else {
-                return
-            }
-            guard let data = data else {return}
+        let task = session.dataTask(with: url) { data, response, error in
+            
+            guard error == nil,
+                let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
+                let data = data else { return }
+            
             do {
                 let json = try JSONSerialization.jsonObject(with: data)
-                guard let dictionary = json as? [String:Any] else {return}
+                guard let dictionary = json as? [String: Any] else { return }
                 completion(dictionary, error)
             } catch {
                 print("something went wrong")
@@ -64,7 +70,10 @@ class Networking {
         }
         task.resume()
     }
-    static func callNetworkImage(type:NetworkCallType, objectName:String, closure:@escaping(Any?,Error?) -> ()){
+    
+    static func callNetworkImage(type: NetworkCallType,
+                                 objectName:String,
+                                 closure: @escaping (Any?, Error?) -> ()) {
         switch type {
         case .imageUrl:
             downloadImage(url: type.getUrl() + objectName + ".png", closure: closure)
@@ -72,13 +81,16 @@ class Networking {
             return
         }
     }
-    private static func downloadImage(url:String, closure:@escaping (UIImage?,Error?) -> ()){
+    
+    private static func downloadImage(url: String, closure: @escaping (UIImage?, Error?) -> ()) {
+        
         guard let url = URL(string:url) else {
             closure(nil, NetworkingErrors.UrlIsBad)
             return
         }
+        
         let session = URLSession.shared
-        let task = session.dataTask(with: url){(data,response,error) in
+        let task = session.dataTask(with: url) { data, response, error in
             guard error == nil else {
                 closure(nil, error)
                 return
@@ -92,7 +104,7 @@ class Networking {
                 closure(nil, NetworkingErrors.NoDataOnUrl)
                 return
             }
-            guard let image = UIImage(data:data) else {
+            guard let image = UIImage(data: data) else {
                 closure(nil, NetworkingErrors.DataHasNoImage)
                 return
             }
@@ -100,24 +112,28 @@ class Networking {
         }
         task.resume()
     }
-    static func homeworldCall(url:String, completion:@escaping ([String:Any], Error?) -> ()) {
-        guard let url = URL(string:url) else {
-            //            completion(nil, NetworkingErrors.UrlIsBad)
+    
+    static func homeworldCall(url: String, completion: @escaping ([String: Any], Error?) -> ()) {
+        
+        guard let url = URL(string: url) else {
+            completion([:], NetworkingErrors.UrlIsBad)
             return
         }
+        
         let session = URLSession.shared
-        let task = session.dataTask(with: url) { (data, response, error) in
-            guard error == nil else {return}
-            guard let response = response as? HTTPURLResponse else {return}
-            guard response.statusCode == 200 else {
-                return
-            }
-            guard let data = data else {return}
+        let task = session.dataTask(with: url) { data, response, error in
+            
+            guard error == nil,
+                let response = response as? HTTPURLResponse,
+                response.statusCode == 200,
+                let data = data else { return }
+            
             do {
                 let json = try JSONSerialization.jsonObject(with: data)
-                guard let dictionary = json as? [String:Any] else {return}
+                guard let dictionary = json as? [String: Any] else { return }
                 completion(dictionary, error)
             } catch {
+                print("something went wrong with the homeworl call.")
             }
         }
         task.resume()
