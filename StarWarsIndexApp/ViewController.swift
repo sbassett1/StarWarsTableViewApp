@@ -13,8 +13,6 @@ class ViewController: UITableViewController {
     var currentPage = "1"
     var characterSet = Set<Int>()
     
-//    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -27,8 +25,6 @@ class ViewController: UITableViewController {
         let endOfCells = scrollView.contentSize.height + scrollView.contentInset.bottom - scrollView.bounds.height
         let didReachEnd:Bool = scrollView.contentOffset.y >= endOfCells
         let numberOfCells = myCharacterObjectArray.count
-        
-//        activityIndicator.startAnimating()
         
         if didReachEnd && numberOfCells <= 88 && !characterSet.contains(numberOfCells){
             characterSet.insert(numberOfCells)
@@ -43,8 +39,6 @@ class ViewController: UITableViewController {
                     self.myCharacterObjectArray += myCharacterArray
                     self.currentPage = String((Int(self.currentPage) ?? 0) + 1)
                     self.tableView.reloadData()
-//                    self.activityIndicator.stopAnimating()
-//                    self.activityIndicator.isHidden = true
                 }
             }
             
